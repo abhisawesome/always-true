@@ -4,6 +4,15 @@ This repository contains a simple proxy server implemented using Node.js and Exp
 
 ## Getting Started
 
+
+### Run using npx
+
+```
+npx always-true
+```
+
+
+
 ### Run image from docker hub
 
 ```
@@ -18,5 +27,4 @@ cd always-true
 docker build -t always-true .
 docker run -d -p 3000:3000 always-true
 ```
-
 
