@@ -1,14 +1,19 @@
 const express = require("express");
 var cors = require("cors");
 const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
 
 app.use(cors());
 
+// Read package.json to get the version
+const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
+const currentVersion = packageJson.version;
+
 // Helper function to send JSON response with headers and request info
-const sendJsonResponse = (req, res) => {
+const sendJsonResponse = (req, res, additionalData = {}) => {
   return res.status(200).json({
     status: "ok",
     success: true,
@@ -21,6 +26,7 @@ const sendJsonResponse = (req, res) => {
       headers: req.headers,
       ip: req.ip,
     },
+    ...additionalData
   });
 };
 
@@ -40,6 +46,9 @@ app.put("/api/user/:id", (req, res) => sendJsonResponse(req, res));
 app.delete("/api/user/:id", (req, res) => sendJsonResponse(req, res));
 app.get("/api/products", (req, res) => sendJsonResponse(req, res));
 app.get("/api/products/:id", (req, res) => sendJsonResponse(req, res));
+
+// New API route to return the current version
+app.get("/version", (req, res) => sendJsonResponse(req, res, { version: currentVersion }));
 
 // Website routes
 app.get("/website", (req, res) => sendHtmlFile(res, "index.html"));
